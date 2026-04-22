@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Req, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import type { Request } from 'express';
 
@@ -22,12 +22,12 @@ export class AppController {
   }
 
   @Put('test/:id')
-  putTest(): string {
-    return 'This is a PUT request';
+  putTest(@Param('id') id: string): string {
+    return `This is a PUT request for id: ${id}`;
   }
 
-  @Delete('test/:id')
-  deleteTest(): string {
-    return 'This is a DELETE request';
+  @Delete('test/:aaa/:id')
+  deleteTest(@Param('aaa') aa: string, @Param('id') id: string): string {
+    return `This is a DELETE request for aaa: ${aa}, id: ${id}`;
   }
 }
