@@ -11,7 +11,7 @@ import {
   Query,
   Body,
 } from '@nestjs/common';
-import { AppService } from '../app.service';
+import { AppService } from '../service/app.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../dto/create-user.dto';
 
