@@ -12,6 +12,8 @@ import {
 import { AppService } from './app.service';
 import type { Request } from 'express';
 
+// @Controller({ path: 'app', host: ':name.example.com' }) 子路由设定
+// @Controller({ path: 'app', host: 'localhost' })
 @Controller('app')
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -60,5 +62,13 @@ export class AppController {
   redirectTest(): void {
     // 重定向装饰器会自动处理重定向，不需要返回值
     // return 'Redirecting to https://www.example.com';
+  }
+
+  // 测试异步请求
+  @Get('async')
+  async asyncTest(): Promise<string> {
+    // 模拟异步操作，比如数据库查询或API调用
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    return 'This is an async response after 5 second delay';
   }
 }
