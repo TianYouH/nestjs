@@ -8,9 +8,12 @@ import {
   Param,
   HttpCode,
   Redirect,
+  Query,
+  Body,
 } from '@nestjs/common';
-import { AppService } from './app.service';
+import { AppService } from '../app.service';
 import type { Request } from 'express';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 // @Controller({ path: 'app', host: ':name.example.com' }) 子路由设定
 // @Controller({ path: 'app', host: 'localhost' })
@@ -70,5 +73,17 @@ export class AppController {
     // 模拟异步操作，比如数据库查询或API调用
     await new Promise((resolve) => setTimeout(resolve, 5000));
     return 'This is an async response after 5 second delay';
+  }
+
+  // 测试 @Query 装饰器
+  @Get('query')
+  queryTest(@Query('name') name: string, @Query('age') age: number): string {
+    return `Hello ${name}, you are ${age} years old`;
+  }
+
+  // 测试 @Body 装饰器
+  @Post('body')
+  bodyTest(@Body() body: CreateUserDto): string {
+    return `Received user: ${body.name}, ${body.email}, ${body.age}`;
   }
 }
