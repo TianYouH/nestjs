@@ -10,6 +10,7 @@ import {
   Redirect,
   Query,
   Body,
+  // Inject,
 } from '@nestjs/common';
 import { AppService } from '../service/app.service';
 import type { Request } from 'express';
@@ -19,7 +20,12 @@ import { CreateUserDto } from '../dto/create-user.dto';
 // @Controller({ path: 'app', host: 'localhost' })
 @Controller('app')
 export class AppController {
+  // 注入服务：构造函数方式
   constructor(private readonly appService: AppService) {}
+
+  // 注入服务：属性方式，适合在继承关系复杂或者构造函数参数过多时使用
+  // @Inject()
+  // private readonly appService: AppService;
 
   @Get('hello')
   getHello(): any {
@@ -28,7 +34,7 @@ export class AppController {
 
   @Get('hello2')
   getHello2(@Req() req: Request): string | undefined {
-    return req.headers['user-agent'];
+    return this.appService.getHello2(req);
   }
 
   @Post('test')
@@ -38,7 +44,7 @@ export class AppController {
 
   @Put('test/:id')
   putTest(@Param('id') id: string): string {
-    return `This is a PUT request for id: ${id}`;
+    return this.appService.getPutTest(id);
   }
 
   @Delete('test/:aaa/:id')
