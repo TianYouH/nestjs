@@ -10,9 +10,11 @@ import {
   Redirect,
   Query,
   Body,
+  ParseIntPipe,
   // Inject,
 } from '@nestjs/common';
 import { AppService } from '../service/app.service';
+import { UserService } from '../user/user.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../dto/create-user.dto';
 
@@ -21,7 +23,10 @@ import { CreateUserDto } from '../dto/create-user.dto';
 @Controller('app')
 export class AppController {
   // 注入服务：构造函数方式
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly userService: UserService, // 注入 UserService
+  ) {}
 
   // 注入服务：属性方式，适合在继承关系复杂或者构造函数参数过多时使用
   // @Inject()
@@ -91,5 +96,16 @@ export class AppController {
   @Post('body')
   bodyTest(@Body() body: CreateUserDto): string {
     return `Received user: ${body.name}, ${body.email}, ${body.age}`;
+  }
+
+  // 测试使用 UserService
+  @Get('users')
+  getAllUsers(): any {
+    return this.userService.findAll();
+  }
+
+  @Get('users/:id')
+  getUserById(@Param('id', ParseIntPipe) id: number): any {
+    return this.userService.findOne(id);
   }
 }
