@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 // User 模块：负责用户相关的功能
 @Module({
@@ -11,4 +12,10 @@ import { UserService } from './user.service';
   // 导出服务：让其他模块也能使用 UserService
   exports: [UserService],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  // 配置中间件
+  configure(consumer: MiddlewareConsumer) {
+    // 应用日志中间件到所有路由
+    consumer.apply(LoggerMiddleware).forRoutes('users');
+  }
+}
