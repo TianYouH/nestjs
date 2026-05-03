@@ -16,7 +16,7 @@ import {
 import { AppService } from '../service/app.service';
 import { UserService } from '../user/user.service';
 import type { Request } from 'express';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 // @Controller({ path: 'app', host: ':name.example.com' }) 子路由设定
 // @Controller({ path: 'app', host: 'localhost' })

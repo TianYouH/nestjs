@@ -1,20 +1,27 @@
-import { IsString, IsEmail, IsNumber, Min, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNumber,
+  Min,
+  IsOptional,
+  IsMobilePhone,
+} from 'class-validator';
 
-// 更新用户 DTO：定义更新用户时需要的字段和验证规则（所有字段都是可选的）
 export class UpdateUserDto {
-  // 姓名：可选，如果提供则必须是字符串
   @IsOptional()
-  @IsString()
+  @IsString({ message: '姓名必须是字符串' })
   name?: string;
 
-  // 邮箱：可选，如果提供则必须是有效的邮箱格式
   @IsOptional()
-  @IsEmail()
+  @IsEmail({}, { message: '邮箱格式错误' })
   email?: string;
 
-  // 年龄：可选，如果提供则必须是数字且大于等于 0
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: '年龄必须是数字' })
+  @Min(0, { message: '年龄必须大于等于0' })
   age?: number;
+
+  @IsOptional()
+  @IsMobilePhone('zh-CN', {}, { message: '手机号格式错误' })
+  mobile?: string;
 }
