@@ -4,14 +4,14 @@ import { IsString, IsEmail, IsNumber, Min } from 'class-validator';
 export class CreateUserDto {
   // 姓名：必须是字符串
   @IsString()
-  name: string;
+  name: string | undefined;
 
   // 邮箱：必须是有效的邮箱格式
   @IsEmail()
-  email: string;
+  email: string | undefined;
 
   // 年龄：必须是数字且大于等于 0
   @IsNumber()
   @Min(0)
-  age: number;
+  age: number | undefined;
 }
