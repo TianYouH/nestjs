@@ -20,19 +20,19 @@ export class UserController {
 
   // GET /users - 获取所有用户
   @Get()
-  findAll(): any {
+  findAll() {
     return this.userService.findAll();
   }
 
   // GET /users/:id - 根据 ID 获取单个用户
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): any {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   // POST /users - 创建新用户
   @Post()
-  create(@Body() createUserDto: CreateUserDto): any {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -41,14 +41,14 @@ export class UserController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ): any {
+  ) {
     return this.userService.update(id, updateUserDto);
   }
 
   // DELETE /users/:id - 删除指定用户
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): any {
-    const deleted = this.userService.remove(id);
-    return { success: deleted };
+  remove(@Param('id', ParseIntPipe) id: number) {
+    this.userService.remove(id);
+    return { success: true, message: '用户删除成功' };
   }
 }

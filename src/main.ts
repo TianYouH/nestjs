@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { GlobalExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
   // 创建 Nest 应用实例
@@ -8,6 +9,9 @@ async function bootstrap() {
 
   // 使用全局验证管道：自动验证 DTO
   app.useGlobalPipes(new ValidationPipe());
+
+  // 使用全局异常过滤器：统一处理所有异常
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // 启用 CORS：使用 NestJS 内置的 CORS 支持
   app.enableCors({

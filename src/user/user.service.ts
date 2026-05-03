@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
+import { NotFoundException } from '../filters/http.exceptions';
 
 // 用户服务：处理用户相关的业务逻辑
 @Injectable()
@@ -28,8 +29,12 @@ export class UserService {
   }
 
   // 根据 ID 查找单个用户
-  findOne(id: number): User | undefined {
-    return this.users.find((user) => user.id === id);
+  findOne(id: number): User {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new NotFoundException(`用户 ID ${id} 不存在`);
+    }
+    return user;
   }
 
   // 创建新用户
@@ -46,12 +51,12 @@ export class UserService {
   }
 
   // 更新用户信息
-  update(id: number, userData: Partial<Omit<User, 'id' | 'createdAt'>>): User | undefined {
+  update(id: number, userData: Partial<Omit<User, 'id' | 'createdAt'>>): User {
     // 查找用户索引
     const userIndex = this.users.findIndex((user) => user.id === id);
-    // 如果用户不存在，返回 undefined
+    // 如果用户不存在，抛出异常
     if (userIndex === -1) {
-      return undefined;
+      throw new NotFoundException(`用户 ID ${id} 不存在`);
     }
     // 更新用户信息（保留原有的 id 和 createdAt）
     this.users[userIndex] = {
@@ -65,9 +70,9 @@ export class UserService {
   remove(id: number): boolean {
     // 查找用户索引
     const userIndex = this.users.findIndex((user) => user.id === id);
-    // 如果用户不存在，返回 false
+    // 如果用户不存在，抛出异常
     if (userIndex === -1) {
-      return false;
+      throw new NotFoundException(`用户 ID ${id} 不存在`);
     }
     // 从数组中删除用户
     this.users.splice(userIndex, 1);
