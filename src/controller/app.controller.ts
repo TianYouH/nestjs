@@ -11,12 +11,15 @@ import {
   Query,
   Body,
   ParseIntPipe,
+  UseGuards,
   // Inject,
 } from '@nestjs/common';
 import { AppService } from '../service/app.service';
 import { UserService } from '../user/user.service';
 import type { Request } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { AuthGuard, RolesGuard } from '../guards';
+import { Roles } from '../decorators';
 
 // @Controller({ path: 'app', host: ':name.example.com' }) 子路由设定
 // @Controller({ path: 'app', host: 'localhost' })
@@ -107,5 +110,34 @@ export class AppController {
   @Get('users/:id')
   getUserById(@Param('id', ParseIntPipe) id: number): any {
     return this.userService.findOne(id);
+  }
+
+  // ==================== 鉴权守卫测试路由 ====================
+  // 使用 @UseGuards(AuthGuard) 装饰器应用鉴权守卫
+  // 只有携带有效的 Authorization: Bearer <token> 请求头才能访问
+  @Get('protected')
+  @UseGuards(AuthGuard)
+  getProtected(@Req() req: Request): string {
+    return `受保护的路由访问成功！用户信息: ${JSON.stringify(req.user)}`;
+  }
+
+  // ==================== 角色守卫测试路由 ====================
+  // 同时使用 AuthGuard 和 RolesGuard
+  // 1. AuthGuard 先验证用户是否登录
+  // 2. RolesGuard 再验证用户是否有 admin 角色
+  // 测试用：使用 Bearer <token>admin 的 token 可以访问
+  @Get('admin')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  getAdminRoute(@Req() req: Request): string {
+    return `管理员路由访问成功！用户信息: ${JSON.stringify(req.user)}`;
+  }
+
+  // 普通用户角色路由：user 或 admin 都可以访问
+  @Get('user')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('user', 'admin')
+  getUserRoute(@Req() req: Request): string {
+    return `用户路由访问成功！用户信息: ${JSON.stringify(req.user)}`;
   }
 }
