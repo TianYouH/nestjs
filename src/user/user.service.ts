@@ -43,7 +43,7 @@ export class UserService {
     const newUser: User = {
       id: this.users.length + 1,
       ...userData,
-      createdAt: new Date(),
+      createdAt: undefined,
     };
     // 添加到用户列表
     this.users.push(newUser);

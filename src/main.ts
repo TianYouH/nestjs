@@ -2,6 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { GlobalExceptionFilter } from './filters/http-exception.filter';
+import {
+  // ExceptionInterceptor,
+  LoggingInterceptor,
+  TransformInterceptor,
+} from './interceptors';
 
 // 应用引导函数：负责创建 Nest 应用实例并启动, 并初始化一些全局配置,按照顺序执行
 // 注意：在这里初始化模块没办法使用到依赖注入其它服务，因为这是应用启动时调用的，而依赖注入是在模块加载时调用的
@@ -29,6 +34,12 @@ async function bootstrap() {
     // 暴露自定义响应头
     exposedHeaders: ['X-Total-Count'],
   });
+
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+    // new ExceptionInterceptor(),
+  );
 
   // 启动应用，监听端口 3000
   await app.listen(process.env.PORT ?? 3000);
